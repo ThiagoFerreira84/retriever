@@ -2,6 +2,9 @@
   command = "ng build --configuration production"
   publish = "dist/retriever/browser"
 
+[[plugins]]
+  package = "@netlify/angular-runtime"
+
 [[redirects]]
   from = "/api/reveal/*"
   to = "https://rkbjpzmqlqcrlcokupis.supabase.co/functions/v1/reveal/:splat"
