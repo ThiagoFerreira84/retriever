@@ -1,0 +1,140 @@
+<!-- finder/finder.component.html -->
+
+<!-- Loading -->
+<div class="finder-wrap" *ngIf="isLoading">
+  <div class="finder-card">
+    <div class="spinner"></div>
+  </div>
+</div>
+
+<!-- Inactive tag -->
+<div class="finder-wrap" *ngIf="isInactive">
+  <div class="finder-card">
+    <div class="finder-icon">🔕</div>
+    <h1 class="headline">Tag no longer active</h1>
+    <p class="sub">
+      The owner has deactivated this tag. If you found this item,
+      please hand it in to the nearest lost property office.
+    </p>
+  </div>
+</div>
+
+<!-- Error -->
+<div class="finder-wrap" *ngIf="isError">
+  <div class="finder-card">
+    <div class="finder-icon">😕</div>
+    <h1 class="headline">Something went wrong</h1>
+    <p class="sub error-text">{{ errorMessage }}</p>
+  </div>
+</div>
+
+<!-- Note sent (Private mode success) -->
+<div class="finder-wrap" *ngIf="isNoteSent">
+  <div class="finder-card">
+    <div class="finder-icon">✅</div>
+    <h1 class="headline">Owner notified!</h1>
+    <p class="sub">They'll reach out to you soon. Thank you for being awesome.</p>
+    <a href="https://retriever.app" class="footer-link">Powered by Retriever</a>
+  </div>
+</div>
+
+<!-- Main finder page -->
+<div class="finder-wrap" *ngIf="item && (isReady || isRevealing || isRevealed || isSendingNote)">
+  <div class="finder-card">
+
+    <div class="finder-icon">🎉</div>
+
+    <h1 class="headline">
+      Good news! You found<br>
+      <span class="item-name">{{ item.type_emoji }} {{ item.name }}</span>
+    </h1>
+    <p class="sub">This item belongs to someone who'd really love to have it back.</p>
+
+    <!-- Info rows -->
+    <div class="info-card">
+      <div class="info-row">
+        <span class="info-label">Item</span>
+        <span class="info-value">{{ item.type_emoji }} {{ item.name }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Owner</span>
+        <span class="info-value">{{ item.display_name }}</span>
+      </div>
+
+      <!-- Open mode: contact shown directly -->
+      <div class="info-row" *ngIf="item.privacy_mode === 'open' && contact">
+        <span class="info-label">Contact</span>
+        <span class="info-value highlight">{{ contact }}</span>
+      </div>
+
+      <!-- Guarded mode: masked until revealed -->
+      <div class="info-row" *ngIf="item.privacy_mode === 'guarded' && !isRevealed">
+        <span class="info-label">Contact</span>
+        <span class="info-value muted">Tap below to reveal</span>
+      </div>
+      <div class="info-row" *ngIf="item.privacy_mode === 'guarded' && isRevealed && contact">
+        <span class="info-label">Contact</span>
+        <span class="info-value highlight">{{ contact }}</span>
+      </div>
+
+      <!-- Private mode: always hidden -->
+      <div class="info-row" *ngIf="item.privacy_mode === 'private'">
+        <span class="info-label">Contact</span>
+        <span class="info-value muted">Hidden — owner will contact you</span>
+      </div>
+
+      <div class="info-row" *ngIf="item.message">
+        <span class="info-label">Message</span>
+        <span class="info-value">{{ item.message }}</span>
+      </div>
+    </div>
+
+    <!-- ── Open mode action ── -->
+    <a
+      *ngIf="item.privacy_mode === 'open' && contact"
+      [href]="contactHref"
+      class="btn btn-primary">
+      {{ contactLabel }}
+    </a>
+
+    <!-- ── Guarded mode actions ── -->
+    <ng-container *ngIf="item.privacy_mode === 'guarded'">
+      <button
+        *ngIf="!isRevealed"
+        class="btn btn-primary"
+        [disabled]="isRevealing"
+        (click)="onFoundIt()">
+        {{ isRevealing ? 'Loading…' : 'I found it — show contact details' }}
+      </button>
+      <a
+        *ngIf="isRevealed && contact"
+        [href]="contactHref"
+        class="btn btn-primary">
+        {{ contactLabel }}
+      </a>
+    </ng-container>
+
+    <!-- ── Private mode: note form ── -->
+    <ng-container *ngIf="item.privacy_mode === 'private'">
+      <textarea
+        class="note-input"
+        rows="3"
+        [(ngModel)]="finderNote"
+        placeholder='Optional: where did you find it? e.g. "Near Central Station, platform 3"'>
+      </textarea>
+      <button
+        class="btn btn-primary"
+        [disabled]="isSendingNote"
+        (click)="onSendNote()">
+        {{ isSendingNote ? 'Notifying owner…' : 'Notify the owner →' }}
+      </button>
+    </ng-container>
+
+    <p class="footer-text">
+      Powered by <a href="https://retriever.app" class="footer-link">Retriever</a>
+      &nbsp;·&nbsp;
+      <a href="https://retriever.app" class="footer-link muted">Register your own items →</a>
+    </p>
+
+  </div>
+</div>

@@ -1,0 +1,20 @@
+[build]
+  command = "ng build --configuration production"
+  publish = "dist/retriever/browser"
+
+[[redirects]]
+  from = "/api/reveal/*"
+  to = "https://rkbjpzmqlqcrlcokupis.supabase.co/functions/v1/reveal/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/notify/*"
+  to = "https://rkbjpzmqlqcrlcokupis.supabase.co/functions/v1/notify/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

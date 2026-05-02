@@ -1,0 +1,14 @@
+{
+  "/api/reveal": {
+    "target": "https://rkbjpzmqlqcrlcokupis.supabase.co/functions/v1",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api/reveal": "/reveal" }
+  },
+  "/api/notify": {
+    "target": "https://rkbjpzmqlqcrlcokupis.supabase.co/functions/v1",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api/notify": "/notify" }
+  }
+}
