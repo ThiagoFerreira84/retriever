@@ -1,0 +1,132 @@
+// register/register.component.scss
+$cream: #F5F0E8; $ink: #1A1612; $rust: #C4501A; $sand: #E8E0D0; $muted: #7A7268;
+* { box-sizing: border-box; }
+
+.reg-wrap {
+  min-height: 100vh;
+  background: $cream;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+
+.reg-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 32px;
+  background: #fff; border-bottom: 1px solid $sand;
+}
+
+.logo {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 20px; font-weight: 700; color: $ink;
+  display: flex; align-items: center; gap: 8px;
+}
+.logo-dot { width:8px; height:8px; background:$rust; border-radius:50%; display:inline-block; }
+
+.btn-ghost {
+  background:none; border:none; font-family:inherit;
+  font-size:13px; color:$muted; cursor:pointer; text-decoration:none;
+  &:hover { color:$rust; }
+}
+
+.reg-card {
+  background: #fff;
+  border: 1px solid $sand;
+  border-radius: 20px;
+  padding: 36px 32px;
+  max-width: 560px;
+  margin: 40px auto;
+  box-shadow: 0 2px 24px rgba(26,22,18,.06);
+}
+
+.headline {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 24px; font-weight: 700; color: $ink;
+  margin: 0 0 8px;
+}
+.sub { font-size:14px; color:$muted; margin:0 0 28px; line-height:1.6; }
+
+.field {
+  margin-bottom: 18px;
+  flex: 1;
+
+  label {
+    display: block;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: .07em; text-transform: uppercase;
+    color: $muted; margin-bottom: 6px;
+  }
+
+  input, select {
+    width: 100%; padding: 11px 13px;
+    border: 1px solid $sand; border-radius: 10px;
+    font-family: inherit; font-size: 15px; color: $ink;
+    background: $cream; outline: none;
+    transition: border-color .15s;
+    &:focus { border-color: $rust; }
+  }
+
+  &.field-sm { flex: 0 0 160px; }
+}
+
+.hint { text-transform: none; font-size: 10px; letter-spacing: 0; }
+
+.field-row {
+  display: flex; gap: 14px;
+  @media (max-width: 480px) { flex-direction: column; }
+}
+
+// Privacy options
+.privacy-options {
+  display: flex; flex-direction: column; gap: 8px;
+}
+
+.privacy-opt {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid $sand; border-radius: 10px;
+  cursor: pointer; transition: border-color .15s;
+
+  input[type=radio] { margin-top: 3px; accent-color: $rust; flex-shrink: 0; }
+
+  &.selected { border-color: $rust; background: #FFF8F0; }
+  &:hover:not(.selected) { border-color: #bbb; }
+}
+
+.opt-label { font-size: 14px; font-weight: 500; color: $ink; }
+.opt-desc  { font-size: 12px; color: $muted; margin-top: 2px; }
+
+.btn-primary {
+  padding: 13px 20px; background: $ink; color: $cream;
+  border: none; border-radius: 10px; font-family: inherit;
+  font-size: 15px; font-weight: 500; cursor: pointer;
+  transition: background .2s; text-decoration: none; display: inline-block;
+  &:hover:not(:disabled) { background: $rust; }
+  &:disabled { opacity: .6; cursor: not-allowed; }
+  &.full { width: 100%; text-align: center; margin-top: 8px; }
+}
+
+.btn-secondary {
+  padding: 13px 20px; background: transparent; color: $ink;
+  border: 1px solid $sand; border-radius: 10px; font-family: inherit;
+  font-size: 15px; font-weight: 500; cursor: pointer;
+  text-decoration: none; display: inline-block;
+  transition: border-color .15s;
+  &:hover { border-color: $ink; }
+}
+
+.error-msg { font-size: 13px; color: $rust; margin: 0 0 12px; }
+
+// Success / QR screen
+.success-icon { font-size: 40px; margin-bottom: 16px; }
+
+.qr-wrap {
+  text-align: center; margin: 24px 0;
+  border: 1px solid $sand; border-radius: 16px; padding: 24px;
+}
+
+.qr-img { width: 180px; height: 180px; display: block; margin: 0 auto 12px; }
+.tag-id { font-family: monospace; font-size: 12px; color: $muted; }
+
+.done-actions {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  button, a { flex: 1; text-align: center; }
+}

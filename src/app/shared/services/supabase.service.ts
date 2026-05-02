@@ -26,20 +26,18 @@ export class SupabaseService {
   // ── Auth ─────────────────────────────────────────────────
 
   signUp(email: string, password: string, name: string) {
-    return from(
-      this.supabase.auth.signUp({
-        email, password,
-        options: { data: { name } }
-      })
-    )
+    return this.supabase.auth.signUp({
+      email, password,
+      options: { data: { name } }
+    })
   }
 
   signIn(email: string, password: string) {
-    return from(this.supabase.auth.signInWithPassword({ email, password }))
+    return this.supabase.auth.signInWithPassword({ email, password })
   }
 
   signInWithMagicLink(email: string) {
-    return from(this.supabase.auth.signInWithOtp({ email }))
+    return this.supabase.auth.signInWithOtp({ email })
   }
 
   signOut() {

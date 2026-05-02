@@ -1,0 +1,91 @@
+<!-- register/register.component.html -->
+<div class="reg-wrap">
+
+  <header class="reg-header">
+    <div class="logo"><span class="logo-dot"></span>Retriever</div>
+    <a routerLink="/dashboard" class="btn-ghost">← Dashboard</a>
+  </header>
+
+  <!-- Success / QR screen -->
+  <div class="reg-card" *ngIf="isDone">
+    <div class="success-icon">🎉</div>
+    <h1 class="headline">Tag ready!</h1>
+    <p class="sub">Print it and attach it to your <strong>{{ typeEmoji }} {{ itemName }}</strong>.</p>
+
+    <div class="qr-wrap">
+      <img [src]="qrDataUrl" alt="QR code" class="qr-img" />
+      <div class="tag-id">retriever.app/t/{{ tagId }}</div>
+    </div>
+
+    <div class="done-actions">
+      <button class="btn-primary" (click)="printTag()">Print tag</button>
+      <a routerLink="/dashboard" class="btn-secondary">Go to dashboard →</a>
+    </div>
+  </div>
+
+  <!-- Registration form -->
+  <div class="reg-card" *ngIf="isForm || isSaving">
+    <h1 class="headline">Register an item</h1>
+    <p class="sub">Fill in the details — we'll generate a QR tag you can print and attach.</p>
+
+    <form (ngSubmit)="onSave()">
+
+      <div class="field-row">
+        <div class="field">
+          <label>Item name</label>
+          <input type="text" [(ngModel)]="itemName" name="itemName"
+            placeholder="e.g. House keys" required />
+        </div>
+        <div class="field field-sm">
+          <label>Type</label>
+          <select [(ngModel)]="typeEmoji" name="typeEmoji">
+            <option *ngFor="let o of emojiOptions" [value]="o.value">{{ o.label }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Display name <span class="hint">(shown to finder)</span></label>
+          <input type="text" [(ngModel)]="displayName" name="displayName"
+            placeholder="Alex S." required />
+        </div>
+        <div class="field">
+          <label>Contact <span class="hint">(phone or email)</span></label>
+          <input type="text" [(ngModel)]="contact" name="contact"
+            placeholder="+61 400 000 000" required />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Message to finder <span class="hint">(optional)</span></label>
+        <input type="text" [(ngModel)]="message" name="message"
+          placeholder="Please call anytime — reward offered!" />
+      </div>
+
+      <div class="field">
+        <label>Privacy mode</label>
+        <div class="privacy-options">
+          <label
+            *ngFor="let opt of privacyOptions"
+            class="privacy-opt"
+            [class.selected]="privacyMode === opt.value">
+            <input type="radio" [(ngModel)]="privacyMode" [value]="opt.value" name="privacyMode" />
+            <div>
+              <div class="opt-label">{{ opt.label }}</div>
+              <div class="opt-desc">{{ opt.desc }}</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <p class="error-msg" *ngIf="state === 'error'">{{ errorMsg }}</p>
+
+      <button type="submit" class="btn-primary full" [disabled]="isSaving">
+        {{ isSaving ? 'Saving…' : 'Generate QR tag →' }}
+      </button>
+
+    </form>
+  </div>
+
+</div>

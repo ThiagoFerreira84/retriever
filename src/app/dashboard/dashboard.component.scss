@@ -1,0 +1,300 @@
+// dashboard/dashboard.component.scss
+$cream: #F5F0E8;
+$ink: #1A1612;
+$rust: #C4501A;
+$sand: #E8E0D0;
+$muted: #7A7268;
+
+* { box-sizing: border-box; }
+
+.dash-wrap {
+  min-height: 100vh;
+  background: $cream;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+
+// ── Header ──────────────────────────────────────────────────
+.dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background: #fff;
+  border-bottom: 1px solid $sand;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.logo {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: $ink;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-dot {
+  width: 8px; height: 8px;
+  background: $rust;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.welcome {
+  font-size: 14px;
+  color: $muted;
+}
+
+.btn-primary {
+  padding: 9px 18px;
+  background: $ink;
+  color: $cream;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background .2s;
+
+  &:hover { background: $rust; }
+}
+
+.btn-ghost {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  color: $muted;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color .15s;
+  &:hover { color: $rust; }
+}
+
+// ── Loading / empty ──────────────────────────────────────────
+.loading-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 80px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 80px 24px;
+
+  .empty-icon { font-size: 48px; margin-bottom: 16px; }
+  h2 { font-family: 'Fraunces', Georgia, serif; font-size: 22px; margin: 0 0 8px; color: $ink; }
+  p  { font-size: 15px; color: $muted; margin: 0 0 24px; }
+}
+
+// ── Main ─────────────────────────────────────────────────────
+.dash-main {
+  padding: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+// ── Items grid ───────────────────────────────────────────────
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.item-card {
+  background: #fff;
+  border: 1px solid $sand;
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: border-color .15s, transform .15s;
+
+  &:hover { border-color: #bbb; transform: translateY(-2px); }
+  &.inactive { opacity: .55; }
+}
+
+.item-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.item-emoji { font-size: 28px; }
+
+.item-badges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+
+  &.privacy        { background: #F0E0D6; color: #993C1D; }
+  &.active         { background: #D8EFDF; color: #2D6A4F; }
+  &.inactive-badge { background: #F0EAE0; color: $muted;  }
+}
+
+.item-name  { font-size: 17px; font-weight: 500; color: $ink;   margin-bottom: 2px; }
+.item-owner { font-size: 13px; color: $muted;   margin-bottom: 12px; }
+
+.item-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: $muted;
+  margin-bottom: 14px;
+}
+
+.item-tag { font-family: monospace; background: #F0EAE0; padding: 2px 6px; border-radius: 4px; }
+
+.item-actions {
+  display: flex;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px solid $sand;
+}
+
+.action-link {
+  font-size: 13px;
+  color: $rust;
+  text-decoration: none;
+  background: none;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity .15s;
+  &:hover { opacity: .7; }
+}
+
+// ── Scan panel ───────────────────────────────────────────────
+.scan-panel {
+  position: fixed;
+  inset: 0;
+  background: rgba(26,22,18,.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 24px;
+}
+
+.scan-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 28px;
+  max-width: 560px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 40px rgba(26,22,18,.15);
+}
+
+.scan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.scan-title    { font-size: 18px; font-weight: 500; color: $ink; }
+.scan-subtitle { font-size: 13px; color: $muted; margin-top: 2px; }
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: $muted;
+  cursor: pointer;
+  padding: 4px;
+  &:hover { color: $ink; }
+}
+
+.scan-empty {
+  font-size: 14px;
+  color: $muted;
+  text-align: center;
+  padding: 32px 0;
+}
+
+.scan-loading {
+  display: flex;
+  justify-content: center;
+  padding: 32px;
+}
+
+.scan-list { margin-bottom: 16px; }
+
+.scan-row {
+  display: grid;
+  grid-template-columns: 100px 160px 1fr;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid $sand;
+  font-size: 13px;
+  align-items: center;
+
+  &:last-child { border-bottom: none; }
+  &.head {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: $muted;
+  }
+}
+
+.scan-time { color: $muted; }
+.scan-loc  { color: $muted; font-size: 12px; }
+
+.scan-action {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-block;
+
+  &.neutral { background: #F0EAE0; color: $muted; }
+  &.success { background: #D8EFDF; color: #2D6A4F; }
+  &.info    { background: #E6F1FB; color: #185FA5; }
+}
+
+.scan-note {
+  font-size: 12px;
+  color: $muted;
+  background: #FFF8F0;
+  border-left: 3px solid $rust;
+  padding: 10px 14px;
+  border-radius: 0 8px 8px 0;
+  line-height: 1.55;
+}
+
+// ── Spinner ──────────────────────────────────────────────────
+.spinner {
+  width: 32px; height: 32px;
+  border: 3px solid $sand;
+  border-top-color: $rust;
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+
+  &.small { width: 20px; height: 20px; border-width: 2px; }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

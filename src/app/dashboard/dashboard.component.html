@@ -1,0 +1,113 @@
+<!-- dashboard/dashboard.component.html -->
+<div class="dash-wrap">
+
+  <!-- Header -->
+  <header class="dash-header">
+    <div class="logo"><span class="logo-dot"></span>Retriever</div>
+    <div class="header-right">
+      <span class="welcome">{{ userName }}</span>
+      <button class="btn-ghost" (click)="signOut()">Sign out</button>
+      <a routerLink="/register" class="btn-primary">+ New item</a>
+    </div>
+  </header>
+
+  <!-- Loading -->
+  <div class="loading-wrap" *ngIf="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!loading && items.length === 0">
+    <div class="empty-icon">🏷️</div>
+    <h2>No items yet</h2>
+    <p>Register your first item to get a printable QR tag.</p>
+    <a routerLink="/register" class="btn-primary">Register an item →</a>
+  </div>
+
+  <!-- Items grid -->
+  <main class="dash-main" *ngIf="!loading && items.length > 0">
+
+    <!-- Scan log panel -->
+    <div class="scan-panel" *ngIf="selectedItem" (click)="closeScans()">
+      <div class="scan-card" (click)="$event.stopPropagation()">
+        <div class="scan-header">
+          <div>
+            <div class="scan-title">{{ selectedItem.type_emoji }} {{ selectedItem.name }}</div>
+            <div class="scan-subtitle">Scan log</div>
+          </div>
+          <button class="close-btn" (click)="closeScans()">✕</button>
+        </div>
+
+        <div class="scan-loading" *ngIf="scansLoading">
+          <div class="spinner small"></div>
+        </div>
+
+        <div class="scan-empty" *ngIf="!scansLoading && scans.length === 0">
+          No scans yet. Once someone scans this tag, it'll appear here.
+        </div>
+
+        <div class="scan-list" *ngIf="!scansLoading && scans.length > 0">
+          <div class="scan-row head">
+            <span>When</span><span>Action</span><span>Location</span>
+          </div>
+          <div class="scan-row" *ngFor="let scan of scans">
+            <span class="scan-time">{{ timeAgo(scan.scanned_at) }}</span>
+            <span class="scan-action" [class]="actionClass(scan.action)">
+              {{ actionLabel(scan.action) }}
+            </span>
+            <span class="scan-loc">{{ location(scan) }}</span>
+          </div>
+        </div>
+
+        <div class="scan-note" *ngIf="!scansLoading && scans.length > 0">
+          <strong>Tip:</strong> Multiple "viewed" with no "revealed" may indicate
+          a harvesting attempt. Consider switching to Private mode.
+        </div>
+      </div>
+    </div>
+
+    <!-- Item cards -->
+    <div class="items-grid">
+      <div
+        class="item-card"
+        *ngFor="let item of items"
+        [class.inactive]="!item.active"
+        (click)="selectItem(item)">
+
+        <div class="item-top">
+          <span class="item-emoji">{{ item.type_emoji }}</span>
+          <div class="item-badges">
+            <span class="badge privacy">{{ privacyLabel(item.privacy_mode) }}</span>
+            <span class="badge" [class.active]="item.active" [class.inactive-badge]="!item.active">
+              {{ item.active ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="item-name">{{ item.name }}</div>
+        <div class="item-owner">{{ item.display_name }}</div>
+
+        <div class="item-meta">
+          <span class="item-tag">{{ item.tag_id }}</span>
+          <span class="item-scanned" *ngIf="item.last_scanned_at">
+            Last scan {{ timeAgo(item.last_scanned_at) }}
+          </span>
+          <span class="item-scanned" *ngIf="!item.last_scanned_at">
+            Never scanned
+          </span>
+        </div>
+
+        <div class="item-actions" (click)="$event.stopPropagation()">
+          <a [href]="qrUrl(item)" target="_blank" class="action-link">View tag →</a>
+          <button
+            class="action-link"
+            (click)="toggleActive(item, $event)">
+            {{ item.active ? 'Deactivate' : 'Reactivate' }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>

@@ -1,0 +1,134 @@
+// auth/auth.component.scss
+.auth-wrap {
+  min-height: 100vh;
+  background: #F5F0E8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+
+.auth-card {
+  background: #fff;
+  border: 1px solid #E8E0D0;
+  border-radius: 20px;
+  padding: 36px 32px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 2px 24px rgba(26,22,18,.06);
+}
+
+.logo {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1A1612;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.logo-dot {
+  width: 8px;
+  height: 8px;
+  background: #C4501A;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.headline {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1A1612;
+  margin: 0 0 8px;
+}
+
+.sub {
+  font-size: 14px;
+  color: #7A7268;
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+
+.sent-icon {
+  font-size: 40px;
+  margin-bottom: 16px;
+}
+
+.field {
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: #7A7268;
+    margin-bottom: 6px;
+  }
+
+  input {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid #E8E0D0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 15px;
+    color: #1A1612;
+    background: #F5F0E8;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color .15s;
+
+    &:focus { border-color: #C4501A; }
+  }
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 13px;
+  background: #1A1612;
+  color: #F5F0E8;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background .2s;
+
+  &:hover:not(:disabled) { background: #C4501A; }
+  &:disabled { opacity: .6; cursor: not-allowed; }
+}
+
+.switchers {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 16px;
+}
+
+.btn-ghost {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  color: #7A7268;
+  cursor: pointer;
+  padding: 4px 0;
+  text-align: left;
+  transition: color .15s;
+
+  &:hover { color: #C4501A; }
+}
+
+.error-msg {
+  font-size: 13px;
+  color: #C4501A;
+  margin: 0 0 12px;
+}

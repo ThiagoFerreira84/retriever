@@ -1,0 +1,74 @@
+<!-- auth/auth.component.html -->
+<div class="auth-wrap">
+  <div class="auth-card">
+
+    <div class="logo">
+      <span class="logo-dot"></span>Retriever
+    </div>
+
+    <!-- Magic link sent / signup confirm -->
+    <ng-container *ngIf="isSent">
+      <div class="sent-icon">✉️</div>
+      <h1 class="headline">Check your email</h1>
+      <p class="sub">
+        We sent a link to <strong>{{ email }}</strong>.<br>
+        Click it to {{ mode === 'magic' ? 'sign in' : 'confirm your account' }}.
+      </p>
+      <button class="btn-ghost" (click)="setMode('signin')">← Back to sign in</button>
+    </ng-container>
+
+    <!-- Auth form -->
+    <ng-container *ngIf="!isSent">
+      <h1 class="headline">
+        {{ mode === 'signup' ? 'Create your account' : mode === 'magic' ? 'Magic link sign in' : 'Welcome back' }}
+      </h1>
+      <p class="sub">
+        {{ mode === 'signup' ? 'Start protecting your belongings.' : mode === 'magic' ? 'We\'ll email you a sign-in link.' : 'Sign in to your Retriever account.' }}
+      </p>
+
+      <form (ngSubmit)="onSubmit()" #f="ngForm">
+
+        <!-- Name (signup only) -->
+        <div class="field" *ngIf="mode === 'signup'">
+          <label>Your name</label>
+          <input type="text" [(ngModel)]="name" name="name" placeholder="Alex Smith" required />
+        </div>
+
+        <!-- Email -->
+        <div class="field">
+          <label>Email</label>
+          <input type="email" [(ngModel)]="email" name="email" placeholder="you@email.com" required />
+        </div>
+
+        <!-- Password (not for magic link) -->
+        <div class="field" *ngIf="mode !== 'magic'">
+          <label>Password</label>
+          <input type="password" [(ngModel)]="password" name="password"
+            [placeholder]="mode === 'signup' ? 'Min. 8 characters' : 'Your password'" required />
+        </div>
+
+        <!-- Error -->
+        <p class="error-msg" *ngIf="isError">{{ errorMsg }}</p>
+
+        <button type="submit" class="btn-primary" [disabled]="isLoading">
+          {{ btnLabel }}
+        </button>
+      </form>
+
+      <!-- Mode switchers -->
+      <div class="switchers">
+        <ng-container *ngIf="mode === 'signin'">
+          <button class="btn-ghost" (click)="setMode('signup')">No account? Sign up →</button>
+          <button class="btn-ghost" (click)="setMode('magic')">Sign in with magic link</button>
+        </ng-container>
+        <ng-container *ngIf="mode === 'signup'">
+          <button class="btn-ghost" (click)="setMode('signin')">Already have an account? Sign in</button>
+        </ng-container>
+        <ng-container *ngIf="mode === 'magic'">
+          <button class="btn-ghost" (click)="setMode('signin')">← Use password instead</button>
+        </ng-container>
+      </div>
+
+    </ng-container>
+  </div>
+</div>
