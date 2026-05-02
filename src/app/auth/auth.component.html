@@ -44,13 +44,22 @@
         <div class="field" *ngIf="mode !== 'magic'">
           <label>Password</label>
           <input type="password" [(ngModel)]="password" name="password"
-            [placeholder]="mode === 'signup' ? 'Min. 8 characters' : 'Your password'" required />
+            #pw="ngModel"
+            [placeholder]="mode === 'signup' ? 'Min. 8 characters' : 'Your password'"
+            required
+            [minlength]="mode === 'signup' ? 8 : 1" />
+          @if (pw.touched && pw.errors?.['required']) {
+            <span class="field-error">Password is required.</span>
+          }
+          @if (pw.touched && pw.errors?.['minlength']) {
+            <span class="field-error">Password must be at least 8 characters.</span>
+          }
         </div>
 
         <!-- Error -->
         <p class="error-msg" *ngIf="isError">{{ errorMsg }}</p>
 
-        <button type="submit" class="btn-primary" [disabled]="isLoading">
+        <button type="submit" class="btn-primary" [disabled]="isLoading || f.invalid">
           {{ btnLabel }}
         </button>
       </form>
