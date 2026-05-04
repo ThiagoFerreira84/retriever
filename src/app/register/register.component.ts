@@ -1,8 +1,9 @@
 // register/register.component.ts
-import { Component, OnInit }  from '@angular/core'
+import { ChangeDetectorRef, Component, OnDestroy, OnInit }  from '@angular/core'
 import { CommonModule }       from '@angular/common'
 import { FormsModule }        from '@angular/forms'
 import { Router, RouterModule } from '@angular/router'
+import { firstValueFrom }     from 'rxjs'
 import { SupabaseService }    from '../shared/services/supabase.service'
 import { encryptContact }     from '../shared/utils/crypto.util'
 import type { PrivacyMode }   from '../shared/types/retriever.types'
@@ -17,8 +18,9 @@ type UIState = 'form' | 'saving' | 'done' | 'error'
   templateUrl: './register.component.html',
   styleUrls:   ['./register.component.scss'],
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   state: UIState = 'form'
+  private redirectTimer?: number
 
   // Form fields
   itemName     = ''
@@ -54,7 +56,14 @@ export class RegisterComponent implements OnInit {
   constructor(
     private supabase: SupabaseService,
     private router:   Router,
+    private cdr:      ChangeDetectorRef,
   ) {}
+
+  ngOnDestroy() {
+    if (this.redirectTimer) {
+      clearTimeout(this.redirectTimer)
+    }
+  }
 
   ngOnInit() {
     this.supabase.getUser().subscribe(user => {
@@ -70,12 +79,13 @@ export class RegisterComponent implements OnInit {
   async onSave() {
     if (!this.itemName || !this.displayName || !this.contact) return
     this.state = 'saving'
+    console.log('Register save started', { itemName: this.itemName, displayName: this.displayName })
 
     try {
-      // Encrypt contact before sending to DB
       const encryptedContact = await encryptContact(this.contact)
+      console.log('Contact encrypted')
 
-      this.supabase.createItem({
+      const item = await firstValueFrom(this.supabase.createItem({
         user_id:       this.userId,
         name:          this.itemName,
         type_emoji:    this.typeEmoji,
@@ -84,28 +94,71 @@ export class RegisterComponent implements OnInit {
         message:       this.message || null,
         privacy_mode:  this.privacyMode,
         active:        true,
-      } as any).subscribe({
-        next: async (item) => {
-          this.tagId    = item.tag_id
-          this.qrDataUrl = await this.generateQR(`${window.location.origin}/t/${item.tag_id}`)
-          this.state    = 'done'
-        },
-        error: (e) => {
-          this.errorMsg = e.message ?? 'Could not save item.'
-          this.state    = 'error'
-        }
+      } as any))
+      console.log('Item saved', item)
+
+      this.tagId = item.tag_id
+      setTimeout(() => {
+        this.state = 'done'
+        console.log('Register save done state', { isSaving: this.isSaving, isDone: this.isDone })
+        this.cdr.detectChanges()
+
+        this.redirectTimer = window.setTimeout(() => {
+          console.log('Redirecting to dashboard after save success')
+          this.router.navigate(['/dashboard'])
+        }, 1200)
       })
+
+      this.generateQR(`${window.location.origin}/t/${item.tag_id}`)
+        .then(url => {
+          this.qrDataUrl = url
+          console.log('QR data set', { qrDataUrl: this.qrDataUrl?.slice(0, 30) })
+          setTimeout(() => this.cdr.detectChanges())
+        })
+        .catch(err => {
+          console.error('QR generation failed', err)
+          setTimeout(() => {
+            this.errorMsg = err?.message ?? 'Could not generate QR code.'
+            this.state    = 'error'
+            this.cdr.detectChanges()
+          })
+        })
     } catch (e: any) {
-      this.errorMsg = e.message ?? 'Encryption failed.'
-      this.state    = 'error'
+      console.error('Register save failed', e)
+      setTimeout(() => {
+        this.errorMsg = e?.message ?? 'Could not save item.'
+        this.state    = 'error'
+        this.cdr.detectChanges()
+      })
     }
   }
 
   private generateQR(url: string): Promise<string> {
-    return (QRCode.default || QRCode).toDataURL(url, {
-                width: 300,
-                margin: 2,
-                color: { dark: '#1A1612', light: '#FFFFFF' }
+    const opts = {
+      width: 300,
+      margin: 2,
+      color: { dark: '#1A1612', light: '#FFFFFF' }
+    }
+
+    const result = (QRCode as any).toDataURL(url, opts, (error: any, data?: string) => {
+      if (error) throw error
+      if (!data) throw new Error('QR generation returned no data')
+    })
+
+    if (result && typeof result.then === 'function') {
+      return result
+    }
+
+    return new Promise((resolve, reject) => {
+      try {
+        ;(QRCode as any).toDataURL(url, opts, (error: any, data?: string) => {
+          if (error) return reject(error)
+          if (!data) return reject(new Error('QR generation returned no data'))
+          resolve(data)
+        })
+      } catch (err) {
+        reject(err)
+      }
     })
   }
 

@@ -32,13 +32,13 @@ ngOnInit() {
 
     // Non-blocking — profile failure won't freeze the dashboard
     this.supabase.getProfile(user.id).subscribe({
-      next:  p => this.userName = p.name,
-      error: () => this.userName = user.email ?? ''  // fallback to email
+      next:  p => Promise.resolve().then(() => this.userName = p.name),
+      error: () => Promise.resolve().then(() => this.userName = user.email ?? '')  // fallback to email
     })
 
     this.supabase.getItems(user.id).subscribe({
-      next:  items => { this.items = items; this.loading = false ; this.cdr.detectChanges()},
-      error: ()    => { this.loading = false ; this.cdr.detectChanges()}
+      next:  items => { this.items = items; this.loading = false; this.cdr.detectChanges() },
+      error: ()    => { this.loading = false; this.cdr.detectChanges() }
     })
   })
 }
