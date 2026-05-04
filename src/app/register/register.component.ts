@@ -6,6 +6,7 @@ import { Router, RouterModule } from '@angular/router'
 import { SupabaseService }    from '../shared/services/supabase.service'
 import { encryptContact }     from '../shared/utils/crypto.util'
 import type { PrivacyMode }   from '../shared/types/retriever.types'
+import * as QRCode         from 'qrcode'
 
 type UIState = 'form' | 'saving' | 'done' | 'error'
 
@@ -101,15 +102,10 @@ export class RegisterComponent implements OnInit {
   }
 
   private generateQR(url: string): Promise<string> {
-    return new Promise((resolve) => {
-      // Dynamically import qrcode to keep bundle small
-      import('qrcode').then(QRCode => {
-        (QRCode.default || QRCode).toDataURL(url, {
-          width: 300,
-          margin: 2,
-          color: { dark: '#1A1612', light: '#FFFFFF' }
-        }).then(resolve)
-      })
+    return (QRCode.default || QRCode).toDataURL(url, {
+                width: 300,
+                margin: 2,
+                color: { dark: '#1A1612', light: '#FFFFFF' }
     })
   }
 
