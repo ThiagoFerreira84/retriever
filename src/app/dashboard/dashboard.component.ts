@@ -1,5 +1,5 @@
 // dashboard/dashboard.component.ts
-import { Component, OnInit , ChangeDetectorRef}    from '@angular/core'h
+import { Component, OnInit , ChangeDetectorRef}    from '@angular/core'
 import { CommonModule }         from '@angular/common'
 import { Router, RouterModule } from '@angular/router'
 import { SupabaseService }      from '../shared/services/supabase.service'
