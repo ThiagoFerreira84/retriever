@@ -1,5 +1,5 @@
 // dashboard/dashboard.component.ts
-import { Component, OnInit }    from '@angular/core'
+import { Component, OnInit , ChangeDetectorRef}    from '@angular/core'h
 import { CommonModule }         from '@angular/common'
 import { Router, RouterModule } from '@angular/router'
 import { SupabaseService }      from '../shared/services/supabase.service'
@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private supabase: SupabaseService,
     private router:   Router,
+        private cdr:    ChangeDetectorRef,
   ) {}
 
 ngOnInit() {
@@ -36,8 +37,8 @@ ngOnInit() {
     })
 
     this.supabase.getItems(user.id).subscribe({
-      next:  items => { this.items = items; this.loading = false },
-      error: ()    => { this.loading = false }
+      next:  items => { this.items = items; this.loading = false ; this.cdr.detectChanges()},
+      error: ()    => { this.loading = false ; this.cdr.detectChanges()}
     })
   })
 }
