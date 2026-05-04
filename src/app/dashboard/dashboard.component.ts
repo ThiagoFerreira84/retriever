@@ -25,18 +25,22 @@ export class DashboardComponent implements OnInit {
     private router:   Router,
   ) {}
 
-  ngOnInit() {
-    this.supabase.getUser().subscribe(user => {
-      if (!user) { this.router.navigate(['/auth']); return }
+ngOnInit() {
+  this.supabase.getUser().subscribe(user => {
+    if (!user) { this.router.navigate(['/auth']); return }
 
-      this.supabase.getProfile(user.id).subscribe(p => this.userName = p.name)
-
-      this.supabase.getItems(user.id).subscribe({
-        next:  items => { this.items = items; this.loading = false },
-        error: ()    => { this.loading = false }
-      })
+    // Non-blocking — profile failure won't freeze the dashboard
+    this.supabase.getProfile(user.id).subscribe({
+      next:  p => this.userName = p.name,
+      error: () => this.userName = user.email ?? ''  // fallback to email
     })
-  }
+
+    this.supabase.getItems(user.id).subscribe({
+      next:  items => { this.items = items; this.loading = false },
+      error: ()    => { this.loading = false }
+    })
+  })
+}
 
   selectItem(item: Item) {
     this.selectedItem = item
