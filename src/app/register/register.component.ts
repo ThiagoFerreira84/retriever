@@ -104,7 +104,7 @@ export class RegisterComponent implements OnInit {
     return new Promise((resolve) => {
       // Dynamically import qrcode to keep bundle small
       import('qrcode').then(QRCode => {
-        QRCode.toDataURL(url, {
+        (QRCode.default || QRCode).toDataURL(url, {
           width: 300,
           margin: 2,
           color: { dark: '#1A1612', light: '#FFFFFF' }
