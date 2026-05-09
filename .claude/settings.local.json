@@ -4,7 +4,10 @@
       "Bash(ng build *)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "mcp__ide__getDiagnostics",
+      "Bash(code *)",
+      "Bash(findstr -i deno)"
     ]
   }
 }

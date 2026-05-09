@@ -111,7 +111,7 @@ async function decryptContact(cipher: string, secret: string): Promise<string> {
   return new TextDecoder().decode(plain)
 }
 
-async function notifyOwner(db: any, item: any, geo: any, action: string) {
+async function notifyOwner(db: any, item: any, geo: any, _action: string) {
   const apiKey = Deno.env.get('RESEND_API_KEY')
   if (!apiKey) return
 
