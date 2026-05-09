@@ -98,9 +98,10 @@
         </div>
 
 <div class="item-actions" (click)="$event.stopPropagation()">
-  <a 
-    href="/t/{{item.tag_id}}"
+  <a
+    [attr.href]="'/t/' + item.tag_id"
     target="_blank"
+    rel="noopener"
     class="action-link"
     (click)="$event.stopPropagation()">
     View tag →
