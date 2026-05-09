@@ -97,14 +97,20 @@
           </span>
         </div>
 
-        <div class="item-actions" (click)="$event.stopPropagation()">
-          <a [href]="qrUrl(item)" target="_blank" class="action-link">View tag →</a>
-          <button
-            class="action-link"
-            (click)="toggleActive(item, $event)">
-            {{ item.active ? 'Deactivate' : 'Reactivate' }}
-          </button>
-        </div>
+<div class="item-actions" (click)="$event.stopPropagation()">
+  <a 
+    href="/t/{{item.tag_id}}"
+    target="_blank"
+    class="action-link"
+    (click)="$event.stopPropagation()">
+    View tag →
+  </a>
+  <button
+    class="action-link"
+    (click)="toggleActive(item, $event)">
+    {{ item.active ? 'Deactivate' : 'Reactivate' }}
+  </button>
+</div>
 
       </div>
     </div>
