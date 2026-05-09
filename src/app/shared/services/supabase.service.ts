@@ -45,8 +45,8 @@ export class SupabaseService {
   }
 
   getUser(): Observable<User | null> {
-    return from(this.supabase.auth.getUser()).pipe(
-      map(({ data }) => data.user)
+    return from(this.supabase.auth.getSession()).pipe(
+      map(({ data }) => data.session?.user ?? null)
     )
   }
 

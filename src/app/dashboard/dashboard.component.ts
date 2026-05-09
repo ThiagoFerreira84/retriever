@@ -27,18 +27,22 @@ export class DashboardComponent implements OnInit {
   ) {}
 
 ngOnInit() {
+  const safetyNet = setTimeout(() => {
+    if (this.loading) { this.loading = false; this.cdr.detectChanges() }
+  }, 5000)
+
   this.supabase.getUser().subscribe(user => {
-    if (!user) { this.router.navigate(['/auth']); return }
+    if (!user) { clearTimeout(safetyNet); this.router.navigate(['/auth']); return }
 
     // Non-blocking — profile failure won't freeze the dashboard
     this.supabase.getProfile(user.id).subscribe({
       next:  p => Promise.resolve().then(() => this.userName = p.name),
-      error: () => Promise.resolve().then(() => this.userName = user.email ?? '')  // fallback to email
+      error: () => Promise.resolve().then(() => this.userName = user.email ?? '')
     })
 
     this.supabase.getItems(user.id).subscribe({
-      next:  items => { this.items = items; this.loading = false; this.cdr.detectChanges() },
-      error: ()    => { this.loading = false; this.cdr.detectChanges() }
+      next:  items => { clearTimeout(safetyNet); this.items = items; this.loading = false; this.cdr.detectChanges() },
+      error: ()    => { clearTimeout(safetyNet); this.loading = false; this.cdr.detectChanges() }
     })
   })
 }
@@ -69,10 +73,6 @@ ngOnInit() {
 
   signOut() {
     this.supabase.signOut().subscribe(() => this.router.navigate(['/auth']))
-  }
-
-  qrUrl(item: Item): string {
-    return `${window.location.origin}/t/${item.tag_id}`
   }
 
   // Format scan location
